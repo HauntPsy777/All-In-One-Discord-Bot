@@ -1,0 +1,57 @@
+const { EmbedBuilder } = require("discord.js");
+const antiBotDB = require("../db/botDB");
+
+module.exports = {
+  name: "guildMemberAdd",
+  async execute(member) {
+    try {
+      // Check if the anti-bot feature is enabled for the guild
+      const isEnabled = await antiBotDB.getSettings(member.guild.id);
+      if (!isEnabled) return;
+
+      // Check if the member is a bot
+      if (member.user.bot) {
+        // Verify bot permissions
+        if (!member.guild.me.permissions.has("KickMembers")) {
+          console.warn(
+            `Missing "Kick Members" permission in guild: ${member.guild.name} (${member.guild.id})`
+          );
+          return;
+        }
+
+        try {
+          // Attempt to kick the bot
+          await member.kick("Anti-Bot: Unauthorized bot");
+          console.log(
+            `Kicked unauthorized bot: ${member.user.tag} from guild: ${member.guild.name}`
+          );
+
+          // Send a log message if a log channel is configured
+          const logChannelId = await antiBotDB.getLogChannel(member.guild.id);
+          const logChannel =
+            member.guild.channels.cache.get(logChannelId) ||
+            member.guild.systemChannel ||
+            member.guild.channels.cache.find((ch) => ch.isTextBased());
+
+          if (logChannel) {
+            await logChannel.send({
+              embeds: [
+                new EmbedBuilder()
+                  .setTitle("Unauthorized Bot Kicked")
+                  .setDescription(
+                    `Bot **${member.user.tag}** was kicked due to Anti-Bot settings.`
+                  )
+                  .setColor("Red")
+                  .setTimestamp(),
+              ],
+            });
+          }
+        } catch (kickError) {
+          console.error(`Failed to kick bot ${member.user.tag}:`, kickError);
+        }
+      }
+    } catch (error) {
+      console.error("Error in guildMemberAdd event handler:", error);
+    }
+  },
+};
