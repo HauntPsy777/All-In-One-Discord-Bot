@@ -51,25 +51,42 @@ All-In-One-Discord-Bot/
 ├── plugins/
 └── slashCommands/n issue or submit a pull request.
 ```
-### 🚀 Installation
+## 🚀 Installation
+
+### 1. Clone the repository
+
+```bash
 git clone https://github.com/HauntPsy777/All-In-One-Discord-Bot.git
 cd All-In-One-Discord-Bot
+```
+
+### 2. Install dependencies
+
+```bash
 npm install
+```
 
-Create a .env file:
+### 3. Configure the bot
 
+Create a `.env` file in the root directory:
+
+```env
 TOKEN=YOUR_DISCORD_BOT_TOKEN
+```
 
-Then start the bot:
+### 4. Start the bot
 
+```bash
 npm start
-⚠️ Disclaimer
+```
 
-This project is not affiliated with Discord.
+## ⚠️ Disclaimer
+
+This project is not affiliated with Discord.  
 Use it responsibly and follow Discord's Terms of Service.
 
-👤 Author
+## 👤 Author
 
-HauntPsy777
+**HauntPsy777**
 
-⭐ Feel free to star the repository if you like the project!
+⭐ If you like the project, consider giving it a star!
